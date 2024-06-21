@@ -1,0 +1,37 @@
+{
+  "name": "discord-bot",
+  "private": true,
+  "scripts": {
+    "clean:branch": "git fetch --prune && git branch | grep -v '^*' | xargs git branch -D",
+    "clean:cache": "turbo run clean",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "prepare": "husky install",
+    "preinstall": "corepack enable"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "nano-staged": "^0.8.0",
+    "turbo": "^1.13.0",
+    "prettier": "^2.0.0",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^8.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.0",
+    "@typescript-eslint/parser": "^4.0.0",
+    "typescript": "5.5.0-beta",
+    "lint-staged": "^11.0.0"
+  },
+  "packageManager": "pnpm@9.1.0",
+  "engines": {
+    "node": ">=20.10.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,json,css,md}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  }
+}
