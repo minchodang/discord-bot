@@ -5,24 +5,24 @@
     "clean:branch": "git fetch --prune && git branch | grep -v '^*' | xargs git branch -D",
     "clean:cache": "turbo run clean",
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev:basic-bot": "turbo run dev --filter=basic-bot",
     "lint": "turbo run lint",
     "format": "turbo run format",
     "prepare": "husky install",
     "preinstall": "corepack enable"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "eslint": "^9.5.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
     "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
     "nano-staged": "^0.8.0",
-    "turbo": "^1.13.0",
-    "prettier": "^2.0.0",
-    "eslint": "^7.0.0",
-    "eslint-config-prettier": "^8.0.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.0.0",
-    "@typescript-eslint/parser": "^4.0.0",
-    "typescript": "5.5.0-beta",
-    "lint-staged": "^11.0.0"
+    "prettier": "^3.3.2",
+    "turbo": "^2.0.4",
+    "typescript": "5.4.5"
   },
   "packageManager": "pnpm@9.1.0",
   "engines": {
@@ -33,5 +33,8 @@
       "prettier --write",
       "eslint --fix"
     ]
+  },
+  "dependencies": {
+    "ts-node": "^10.9.2"
   }
 }
