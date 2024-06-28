@@ -3,7 +3,7 @@ import { SlashCommand } from '../types/slashCommand';
 import axios from 'axios';
 
 export const search: SlashCommand = {
-  name: '구글 검색',
+  name: '구글-검색',
   description: '구글에서 검색을 수행합니다.',
   options: [
     {
