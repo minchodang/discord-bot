@@ -1,4 +1,4 @@
-import { Client, Interaction } from 'discord.js';
+import { Client, Interaction, Intents } from 'discord.js';
 import dotenv from 'dotenv';
 import commands from './commands';
 
@@ -10,7 +10,9 @@ console.log('BOT_TOKEN:', process.env.BOT_TOKEN);
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
-const client = new Client({ intents: [] });
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+});
 
 const startBot = async () => {
   try {
@@ -22,7 +24,6 @@ const startBot = async () => {
         console.log('info: command registered');
       }
     });
-    // 핸들링 로직 추가
 
     client.on('interactionCreate', async (interaction: Interaction) => {
       if (interaction.isCommand()) {
@@ -31,8 +32,21 @@ const startBot = async () => {
         );
         if (currentCommand) {
           await interaction.deferReply();
-          currentCommand.execute(client, interaction);
-          console.log(`info: command ${currentCommand.name} handled correctly`);
+          try {
+            await currentCommand.execute(client, interaction);
+            console.log(
+              `info: command ${currentCommand.name} handled correctly`
+            );
+          } catch (error) {
+            console.error(
+              `Error handling command ${currentCommand.name}:`,
+              error
+            );
+            await interaction.followUp({
+              content: '명령어 실행 중 오류가 발생했습니다.',
+              ephemeral: true,
+            });
+          }
         }
       }
     });
