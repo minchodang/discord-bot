@@ -1,5 +1,9 @@
 import { SlashCommand } from '../types/slashCommand';
-import { Client, CommandInteraction, GuildMember } from 'discord.js';
+import {
+  ChatInputCommandInteraction,
+  GuildMember,
+  SlashCommandBuilder,
+} from 'discord.js';
 
 interface UserRequest {
   userId: string;
@@ -15,10 +19,17 @@ function isGuildMember(member: unknown): member is GuildMember {
 }
 
 export const handsUp: SlashCommand = {
-  name: '손들기',
-  description: '발언권 부여 기능',
-  options: [],
-  execute: async (client: Client, interaction: CommandInteraction) => {
+  data: new SlashCommandBuilder()
+    .setName('손들기')
+    .setDescription('발언권 부여 기능'),
+  execute: async (_, interaction: ChatInputCommandInteraction) => {
+    if (!interaction.inGuild()) {
+      await interaction.editReply({
+        content: '이 명령어는 서버 내에서만 사용 가능합니다.',
+      });
+      return;
+    }
+
     if (isGuildMember(interaction.member) && interaction.member.voice.channel) {
       const now = Date.now();
       const userId = interaction.user.id;
@@ -51,7 +62,9 @@ export const handsUp: SlashCommand = {
         `${nextSpeaker.userName} 님에게 발언권이 부여되었습니다!`
       );
     } else {
-      await interaction.editReply('먼저 음성 채널에 입장해주세요.');
+      await interaction.editReply({
+        content: '먼저 음성 채널에 입장해주세요.',
+      });
     }
   },
 };

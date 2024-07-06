@@ -1,17 +1,16 @@
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import { SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../types/slashCommand';
 
 export const echo: SlashCommand = {
-  name: '메아리',
-  description: '말을 그대로 따라합니다.',
-  options: [
-    {
-      required: true,
-      name: '뭐라고',
-      description: '따라하게 시킬 내용을 적습니다',
-      type: ApplicationCommandOptionTypes.STRING,
-    },
-  ],
+  data: new SlashCommandBuilder()
+    .addStringOption((option) =>
+      option
+        .setName('뭐라고')
+        .setDescription('따라하게 시킬 내용을 적습니다')
+        .setRequired(true)
+    )
+    .setName('메아리')
+    .setDescription('말을 그대로 따라합니다.') as SlashCommandBuilder,
   execute: async (_, interaction) => {
     const echoMessage = interaction.options.get('뭐라고')?.value || '';
     await interaction.followUp({
