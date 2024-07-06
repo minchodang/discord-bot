@@ -77,6 +77,10 @@ export const createPoll: SlashCommand = {
 
     polls.push(newPoll);
 
+    // Debugging: Log the newly created poll
+    console.log('New poll created:', newPoll);
+    console.log('Current polls array:', polls);
+
     const buttons = new MessageActionRow().addComponents(
       options.map((option, index) =>
         new MessageButton()
