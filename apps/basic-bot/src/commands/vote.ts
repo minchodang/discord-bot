@@ -1,10 +1,13 @@
-import { SlashCommand } from '../types/slashCommand';
 import {
   Client,
+  SlashCommandBuilder,
   CommandInteraction,
-  MessageActionRow,
-  MessageButton,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
 } from 'discord.js';
+import { SlashCommand } from '../types/slashCommand';
+import { addPoll } from '../store/pollStore';
 
 export interface Vote {
   option: string;
@@ -19,51 +22,25 @@ interface Poll {
   isActive: boolean;
 }
 
-export const polls: Poll[] = [];
-
 export const createPoll: SlashCommand = {
-  name: '투표생성',
-  description: '새로운 투표를 생성합니다.',
-  options: [
-    {
-      name: '질문',
-      type: 'STRING',
-      description: '투표 질문',
-      required: true,
-    },
-    {
-      name: '옵션1',
-      type: 'STRING',
-      description: '투표 옵션 1',
-      required: true,
-    },
-    {
-      name: '옵션2',
-      type: 'STRING',
-      description: '투표 옵션 2',
-      required: true,
-    },
-    {
-      name: '옵션3',
-      type: 'STRING',
-      description: '투표 옵션 3',
-      required: false,
-    },
-    {
-      name: '옵션4',
-      type: 'STRING',
-      description: '투표 옵션 4',
-      required: false,
-    },
-  ],
+  data: new SlashCommandBuilder()
+    .setName('투표생성')
+    .setDescription('새로운 투표를 생성합니다.')
+    .addStringOption((option) =>
+      option.setName('질문').setDescription('투표 질문').setRequired(true)
+    )
+    .addStringOption((option) =>
+      option
+        .setName('옵션')
+        .setDescription('투표 옵션 (쉼표로 구분)')
+        .setRequired(true)
+    ) as SlashCommandBuilder,
   execute: async (client: Client, interaction: CommandInteraction) => {
+    if (!interaction.isChatInputCommand()) return;
+
     const question = interaction.options.getString('질문', true);
-    const options = [
-      interaction.options.getString('옵션1', true),
-      interaction.options.getString('옵션2', true),
-      interaction.options.getString('옵션3'),
-      interaction.options.getString('옵션4'),
-    ].filter((option): option is string => option !== null);
+    const optionsString = interaction.options.getString('옵션', true);
+    const options = optionsString.split(',').map((option) => option.trim());
 
     const pollId = `${Date.now()}-${interaction.user.id}`;
 
@@ -75,25 +52,21 @@ export const createPoll: SlashCommand = {
       isActive: true,
     };
 
-    polls.push(newPoll);
+    addPoll(newPoll);
 
-    // Debugging: Log the newly created poll
-    console.log('New poll created:', newPoll);
-    console.log('Current polls array:', polls);
-
-    const buttons = new MessageActionRow().addComponents(
+    const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
       options.map((option, index) =>
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId(`${pollId}-${index}`)
-          .setLabel(option)
-          .setStyle('PRIMARY')
+          .setLabel(`${option} (0)`)
+          .setStyle(ButtonStyle.Primary)
       )
     );
 
-    const endPollButton = new MessageButton()
+    const endPollButton = new ButtonBuilder()
       .setCustomId(`${pollId}-end`)
       .setLabel('투표 종료')
-      .setStyle('DANGER');
+      .setStyle(ButtonStyle.Danger);
 
     buttons.addComponents(endPollButton);
 
