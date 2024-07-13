@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    target-branch: 'develop'
+    versioning-strategy: increase
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+
+  - package-ecosystem: 'npm'
+    directory: '/apps/basic-bot'
+    schedule:
+      interval: 'weekly'
+    target-branch: 'develop'
+    versioning-strategy: increase
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+
+  - package-ecosystem: 'npm'
+    directory: '/apps/music-bot'
+    schedule:
+      interval: 'weekly'
+    target-branch: 'develop'
+    versioning-strategy: increase
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+
+  # 필요한 경우 다른 apps/* 디렉토리에 대해서도 같은 방식으로 설정을 추가합니다
