@@ -65,7 +65,7 @@ export const notice: SlashCommand = {
     try {
       const submission = await interaction.awaitModalSubmit({
         filter,
-        time: 60000,
+        time: 600 * 1000,
       });
 
       let noticeContent = submission.fields.getTextInputValue('contentInput');
@@ -106,7 +106,7 @@ export const notice: SlashCommand = {
             i.customId === 'channelSelect' &&
             i.user.id === interaction.user.id &&
             i.componentType === ComponentType.StringSelect,
-          time: 60000,
+          time: 600 * 1000,
         }
       );
 
@@ -141,37 +141,60 @@ async function processMentions(
   content: string,
   interaction: ChatInputCommandInteraction
 ): Promise<string> {
-  const mentionRegex = /@(everyone|here|[!&]?\d+)/g;
+  if (!interaction.guild) return content;
+
+  const mentionRegex = /<@(everyone|here|[^\s>]+)>|<#([^\s>]+)>/g;
   let match;
 
   while ((match = mentionRegex.exec(content)) !== null) {
-    const mention = match[1];
+    const mention = match[1] || match[2];
+
     if (mention === 'everyone' || mention === 'here') {
-      // @everyone과 @here는 그대로 유지
+      content = content.replace(match[0], `@${mention}`);
       continue;
     }
 
-    const id = mention.replace(/[!&]/g, '');
-    if (interaction.guild) {
-      const member = await interaction.guild.members
-        .fetch(id)
-        .catch(() => null);
+    try {
+      // ID로 멤버 찾기
+      let member = interaction.guild.members.cache.get(mention);
+      if (!member) {
+        // ID로 찾지 못한 경우, 이름으로 검색
+        member = await interaction.guild.members
+          .fetch({ query: mention, limit: 1 })
+          .then((members) => members.first());
+      }
       if (member) {
-        content = content.replace(match[0], `@${id}`);
+        content = content.replace(match[0], `<@${member.id}>`);
         continue;
       }
 
-      const role = await interaction.guild.roles.fetch(id).catch(() => null);
+      // ID로 역할 찾기
+      let role = interaction.guild.roles.cache.get(mention);
+      if (!role) {
+        // ID로 찾지 못한 경우, 이름으로 검색
+        role = interaction.guild.roles.cache.find(
+          (r) => r.name.toLowerCase() === mention.toLowerCase()
+        );
+      }
       if (role) {
-        content = content.replace(match[0], `@&${id}`);
+        content = content.replace(match[0], `<@&${role.id}>`);
         continue;
       }
 
-      const channel = interaction.guild.channels.cache.get(id);
+      // ID로 채널 찾기
+      let channel = interaction.guild.channels.cache.get(mention);
+      if (!channel) {
+        // ID로 찾지 못한 경우, 이름으로 검색
+        channel = interaction.guild.channels.cache.find(
+          (c) => c.name.toLowerCase() === mention.toLowerCase()
+        );
+      }
       if (channel) {
-        content = content.replace(match[0], `#${id}`);
+        content = content.replace(match[0], `<#${channel.id}>`);
         continue;
       }
+    } catch (error) {
+      console.error(`Error processing mention for '${mention}':`, error);
     }
   }
 
