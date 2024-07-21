@@ -7,7 +7,6 @@ import {
   Client,
   GatewayIntentBits,
   Interaction,
-  ModalSubmitInteraction,
 } from 'discord.js';
 import dotenv from 'dotenv';
 import commands from './commands';
@@ -41,8 +40,6 @@ const startBot = async () => {
         await handleChatInputCommand(interaction);
       } else if (interaction.isButton()) {
         await handleButtonInteraction(interaction);
-      } else if (interaction.isModalSubmit()) {
-        await handleModalSubmit(interaction);
       }
     });
   } catch (error) {
@@ -62,7 +59,10 @@ async function handleChatInputCommand(
   );
   if (currentCommand) {
     try {
-      if (interaction.commandName !== '투표생성') {
+      if (
+        interaction.commandName !== '투표생성' &&
+        interaction.commandName !== '공지사항'
+      ) {
         await interaction.deferReply();
       }
       await currentCommand.execute(client, interaction);
@@ -167,33 +167,6 @@ async function handleButtonInteraction(interaction: ButtonInteraction) {
   });
 
   console.log('Updated polls:', polls); // 로그 추가
-}
-
-// 이 함수를 client.on('interactionCreate') 이벤트 핸들러에 추가하세요
-async function handleModalSubmit(interaction: ModalSubmitInteraction) {
-  if (!interaction.isModalSubmit()) return;
-
-  const [pollId, optionIndex] = interaction.customId.split('-');
-  const poll = polls.find((p) => p.pollId === pollId);
-
-  if (!poll) {
-    await interaction.reply({
-      content: '투표를 찾을 수 없습니다.',
-      ephemeral: true,
-    });
-    return;
-  }
-
-  const option = poll.options[parseInt(optionIndex)];
-  const voters = poll.votes
-    .filter((v) => v.option === option)
-    .map((v) => `<@${v.userId}>`)
-    .join('\n');
-
-  await interaction.reply({
-    content: `**${option}**에 투표한 사용자:\n${voters || '없음'}`,
-    ephemeral: true,
-  });
 }
 
 startBot();
