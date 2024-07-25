@@ -6,6 +6,7 @@
     "clean:cache": "turbo run clean",
     "build": "turbo run build",
     "dev:basic-bot": "turbo run dev --filter=basic-bot",
+    "dev:music-bot": "turbo run dev --filter=music-bot",
     "lint": "turbo run lint",
     "format": "turbo run format",
     "prepare": "husky install",
