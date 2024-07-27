@@ -12,6 +12,7 @@
   "dependencies": {
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
+    "googleapis": "^140.0.1",
     "typescript": "^5.5.3"
   },
   "devDependencies": {
