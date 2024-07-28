@@ -53,6 +53,9 @@ async function handleChatInputCommand(
   );
   if (currentCommand) {
     try {
+      // 상호작용을 지연시킵니다.
+      await interaction.deferReply();
+
       await currentCommand.execute(client, interaction);
       console.log(
         `info: command ${currentCommand.data.name} handled correctly`
@@ -62,16 +65,19 @@ async function handleChatInputCommand(
         `Error handling command ${currentCommand.data.name}:`,
         error
       );
-      if (interaction.deferred || interaction.replied) {
-        await interaction.followUp({
-          content: '명령어 실행 중 오류가 발생했습니다.',
-          ephemeral: true,
-        });
-      } else {
-        await interaction.reply({
-          content: '명령어 실행 중 오류가 발생했습니다.',
-          ephemeral: true,
-        });
+      try {
+        if (interaction.deferred || interaction.replied) {
+          await interaction.editReply({
+            content: '명령어 실행 중 오류가 발생했습니다.',
+          });
+        } else {
+          await interaction.reply({
+            content: '명령어 실행 중 오류가 발생했습니다.',
+            ephemeral: true,
+          });
+        }
+      } catch (replyError) {
+        console.error('Failed to send error message:', replyError);
       }
     }
   }
