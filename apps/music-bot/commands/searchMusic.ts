@@ -1,10 +1,9 @@
 import { SlashCommand } from '../types/slashCommand';
 import { SlashCommandBuilder } from 'discord.js';
-import { google } from 'googleapis';
+import { google, youtube_v3 } from 'googleapis';
 
 const youtube = google.youtube({
   version: 'v3',
-  auth: process.env.YOUTUBE_API_KEY, // YouTube API 키를 환경 변수에서 가져옵니다.
 });
 
 export const searchMusic: SlashCommand = {
@@ -16,18 +15,22 @@ export const searchMusic: SlashCommand = {
         .setName('노래')
         .setDescription('검색할 노래 제목을 입력하세요')
         .setRequired(true)
-    ),
+    ) as SlashCommandBuilder,
   execute: async (_, interaction) => {
     // _ 대신 interaction 직접 사용
     const query = interaction.options.getString('노래', true);
 
+    console.log(process.env.YOUTUBE_API_KEY, '키값은?');
+
     try {
-      const res = await youtube.search.list({
-        part: 'snippet',
+      const params: youtube_v3.Params$Resource$Search$List = {
+        part: ['snippet'],
         q: query,
         maxResults: 1,
-        type: 'video',
-      });
+        type: ['video'],
+        key: process.env.YOUTUBE_API_KEY,
+      };
+      const res = await youtube.search.list(params);
 
       const video = res.data.items?.[0];
 
