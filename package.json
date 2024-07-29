@@ -13,7 +13,7 @@
     "preinstall": "corepack enable"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.16.1",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.16.1",
     "eslint": "^9.7.0",
     "eslint-config-prettier": "^9.1.0",
