@@ -17,7 +17,7 @@
     "dotenv": "^16.4.5",
     "ffmpeg-static": "^5.2.0",
     "googleapis": "^142.0.0",
-    "libsodium-wrappers": "^0.7.14",
+    "libsodium-wrappers": "^0.7.15",
     "typescript": "^5.5.4",
     "ytdl-core": "^4.11.5"
   },
