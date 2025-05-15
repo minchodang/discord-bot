@@ -153,6 +153,7 @@ packages:
   '@discordjs/voice@0.17.0':
     resolution: {integrity: sha512-hArn9FF5ZYi1IkxdJEVnJi+OxlwLV0NJYWpKXsmNOojtGtAZHxmsELA+MZlu2KW1F/K1/nt7lFOfcMXNYweq9w==}
     engines: {node: '>=16.11.0'}
+    deprecated: This version uses deprecated encryption modes. Please use a newer version.
 
   '@discordjs/ws@1.1.1':
     resolution: {integrity: sha512-PZ+vLpxGCRtmr2RMkqh8Zp+BenUaJqlS6xhgWKEZcgC/vfHLEzpHtKkB0sl3nZWpwtcKk6YWy+pU3okL2I97FA==}
@@ -161,6 +162,7 @@ packages:
   '@distube/ytdl-core@4.14.4':
     resolution: {integrity: sha512-dHb4GW3qATIjRsS6VIhm3Pop7FdUcDFhsnyQlsPeXW7UhTPuNS0BmraKiTpFbpp0Ky+rxBQjJBfPRFsM+dT1fg==}
     engines: {node: '>=14.0'}
+    deprecated: This version is deprecated, please upgrade to the latest version.
 
   '@eslint-community/eslint-utils@4.4.0':
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -1430,8 +1432,8 @@ packages:
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
-  undici@5.28.4:
-    resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
+  undici@5.29.0:
+    resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
 
   undici@6.13.0:
@@ -1622,12 +1624,12 @@ snapshots:
 
   '@distube/ytdl-core@4.14.4':
     dependencies:
-      http-cookie-agent: 6.0.5(tough-cookie@4.1.4)(undici@5.28.4)
+      http-cookie-agent: 6.0.5(tough-cookie@4.1.4)(undici@5.29.0)
       m3u8stream: 0.8.6
       miniget: 4.2.3
       sax: 1.4.1
       tough-cookie: 4.1.4
-      undici: 5.28.4
+      undici: 5.29.0
     transitivePeerDependencies:
       - supports-color
 
@@ -2355,12 +2357,12 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  http-cookie-agent@6.0.5(tough-cookie@4.1.4)(undici@5.28.4):
+  http-cookie-agent@6.0.5(tough-cookie@4.1.4)(undici@5.29.0):
     dependencies:
       agent-base: 7.1.1
       tough-cookie: 4.1.4
     optionalDependencies:
-      undici: 5.28.4
+      undici: 5.29.0
     transitivePeerDependencies:
       - supports-color
 
@@ -2901,7 +2903,7 @@ snapshots:
 
   undici-types@6.19.8: {}
 
-  undici@5.28.4:
+  undici@5.29.0:
     dependencies:
       '@fastify/busboy': 2.1.1
 
